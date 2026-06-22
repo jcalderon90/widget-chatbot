@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página de ejemplo — Garoo Chat</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 640px;
+        margin: 80px auto;
+        padding: 0 24px;
+        color: #334155;
+        line-height: 1.6;
+      }
+      h1 {
+        color: #0f172a;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Mi sitio web</h1>
+    <p>
+      Esta es una página de ejemplo. El widget de chat se carga desde un script externo y
+      aparece en la esquina inferior de la pantalla.
+    </p>
+
+    <script src="./garoo-chat-widget.js"></script>
+    <script>
+      GarooChat.init({
+        title: 'Soporte Garoo',
+        subtitle: 'En línea',
+        primaryColor: '#0d9488',
+        greeting: '¡Hola! ¿Cómo podemos ayudarte?',
+      })
+    </script>
+  </body>
+</html>
