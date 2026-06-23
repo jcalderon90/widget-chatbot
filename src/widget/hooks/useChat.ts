@@ -13,7 +13,7 @@ function getOrCreateSessionId(): string {
   const key = 'gsid_garoo'
   let id = localStorage.getItem(key)
   if (!id) {
-    id = `gsid_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`
+    id = crypto.randomUUID()
     localStorage.setItem(key, id)
   }
   return id
@@ -45,8 +45,8 @@ async function fetchN8nReply(
     throw new Error(`API error: ${response.status}`)
   }
 
-  const data = (await response.json()) as { response?: string; reply?: string; message?: string }
-  return data.response ?? data.reply ?? data.message ?? MOCK_REPLIES[0]
+  const data = (await response.json()) as { response?: string; response_text?: string; reply?: string; message?: string }
+  return data.response_text ?? data.response ?? data.reply ?? data.message ?? MOCK_REPLIES[0]
 }
 
 function getMockReply(): string {

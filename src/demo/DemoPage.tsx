@@ -8,6 +8,9 @@ export function DemoPage() {
 
     const timer = setTimeout(() => {
       widget = mountWidget({
+        apiUrl: import.meta.env.VITE_WEBHOOK_URL as string,
+        propertyId: 'ITZ',
+        pageId: 'widget',
         title: 'Garoo Assistant',
         subtitle: 'En línea · Respuesta rápida',
         primaryColor: '#0d9488',
