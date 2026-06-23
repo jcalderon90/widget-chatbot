@@ -2,6 +2,9 @@ export type WidgetPosition = 'bottom-right' | 'bottom-left'
 
 export interface WidgetConfig {
   apiUrl?: string
+  webhookKey?: string
+  propertyId?: 'ITZ' | 'KAA'
+  pageId?: string
   title?: string
   subtitle?: string
   primaryColor?: string

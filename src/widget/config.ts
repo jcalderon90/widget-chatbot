@@ -2,6 +2,9 @@ import type { WidgetConfig } from './types'
 
 export const DEFAULT_CONFIG: Required<WidgetConfig> = {
   apiUrl: '',
+  webhookKey: '',
+  propertyId: 'ITZ',
+  pageId: 'widget',
   title: 'Garoo Assistant',
   subtitle: 'Suele responder en segundos',
   primaryColor: '#0d9488',
