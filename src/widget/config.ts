@@ -3,11 +3,11 @@ import type { WidgetConfig } from './types'
 export const DEFAULT_CONFIG: Required<WidgetConfig> = {
   apiUrl: '',
   webhookKey: '',
-  propertyId: 'ITZ',
+  propertyId: '',
   pageId: 'widget',
   title: 'Garoo Assistant',
   subtitle: 'Suele responder en segundos',
-  primaryColor: '#0d9488',
+  primaryColor: '#1e443a',
   position: 'bottom-right',
   greeting: '¡Hola! 👋 ¿En qué puedo ayudarte hoy?',
   placeholder: 'Escribe tu mensaje...',
