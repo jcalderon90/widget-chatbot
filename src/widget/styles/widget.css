@@ -2,15 +2,15 @@
 
 :host,
 .garoo-widget {
-  --garoo-primary: #0d9488;
-  --garoo-primary-dark: #0f766e;
-  --garoo-primary-soft: rgba(13, 148, 136, 0.12);
+  --garoo-primary: #1e443a;
+  --garoo-primary-dark: #132c25;
+  --garoo-primary-soft: rgba(30, 68, 58, 0.12);
   --garoo-bg: #ffffff;
-  --garoo-surface: #f8fafc;
-  --garoo-border: #e2e8f0;
+  --garoo-surface: #eff1f5;
+  --garoo-border: #dfe2e8;
   --garoo-text: #0f172a;
   --garoo-text-muted: #64748b;
-  --garoo-user-bubble: #0f172a;
+  --garoo-user-bubble: #1e443a;
   --garoo-shadow: 0 24px 64px rgba(15, 23, 42, 0.18);
   --garoo-radius: 18px;
   --garoo-font: 'Outfit', system-ui, sans-serif;
@@ -46,6 +46,7 @@
 }
 
 .garoo-launcher {
+  position: relative;
   width: 60px;
   height: 60px;
   border: none;
@@ -55,13 +56,13 @@
   cursor: pointer;
   display: grid;
   place-items: center;
-  box-shadow: 0 12px 32px rgba(13, 148, 136, 0.45);
+  box-shadow: 0 12px 32px rgba(30, 68, 58, 0.45);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
 }
 
 .garoo-launcher:hover {
   transform: scale(1.06);
-  box-shadow: 0 16px 40px rgba(13, 148, 136, 0.5);
+  box-shadow: 0 16px 40px rgba(30, 68, 58, 0.5);
 }
 
 .garoo-launcher:active {
@@ -178,10 +179,10 @@
 }
 
 .garoo-header__close {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.15);
   color: white;
   cursor: pointer;
@@ -220,6 +221,7 @@
   border-radius: 16px;
   font-size: 0.9rem;
   line-height: 1.45;
+  overflow-wrap: break-word;
   word-break: break-word;
   animation: garoo-bubble-in 0.22s ease;
 }
@@ -311,7 +313,7 @@
 
 .garoo-input {
   flex: 1;
-  min-height: 42px;
+  min-height: 44px;
   max-height: 120px;
   padding: 10px 14px;
   border: 1px solid var(--garoo-border);
@@ -335,8 +337,8 @@
 }
 
 .garoo-send {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 12px;
   background: var(--garoo-primary);
@@ -374,16 +376,74 @@
   letter-spacing: 0.02em;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 480px), (max-height: 520px) {
+  .garoo-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100dvw;
+    height: 100dvh;
+    pointer-events: none;
+  }
+
   .garoo-root--bottom-right,
   .garoo-root--bottom-left {
-    right: 16px;
-    left: 16px;
-    bottom: 16px;
+    right: 0;
+    left: 0;
+    bottom: 0;
   }
 
   .garoo-panel {
-    width: calc(100vw - 32px);
-    height: min(520px, calc(100vh - 100px));
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100dvw;
+    height: 100dvh;
+    max-width: 100dvw;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+    z-index: 2147483001;
+    transform-origin: bottom center;
+    animation: garoo-panel-mobile-in 0.28s cubic-bezier(0.32, 0.94, 0.6, 1);
+  }
+
+  .garoo-launcher {
+    position: fixed;
+    bottom: 16px;
+    z-index: 2147483000;
+    pointer-events: auto;
+  }
+
+  .garoo-root--bottom-right .garoo-launcher {
+    right: 16px;
+  }
+
+  .garoo-root--bottom-left .garoo-launcher {
+    left: 16px;
+  }
+
+  /* Hide launcher on mobile when panel is open */
+  .garoo-root:has(.garoo-panel) .garoo-launcher {
+    display: none;
+  }
+
+  .garoo-input {
+    font-size: 16px; /* Prevents iOS auto-zoom */
+  }
+}
+
+@keyframes garoo-panel-mobile-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0.9;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }

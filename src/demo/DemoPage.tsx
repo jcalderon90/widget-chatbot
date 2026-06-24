@@ -13,7 +13,7 @@ export function DemoPage() {
         pageId: 'widget',
         title: 'Garoo Assistant',
         subtitle: 'En línea · Respuesta rápida',
-        primaryColor: '#0d9488',
+        primaryColor: '#1e443a',
         position: 'bottom-right',
         greeting: '¡Hola! 👋 Soy el asistente de Garoo. ¿En qué puedo ayudarte?',
         placeholder: 'Escribe tu mensaje...',
@@ -45,7 +45,7 @@ export function DemoPage() {
 <script>
   GarooChat.init({
     title: 'Soporte',
-    primaryColor: '#0d9488',
+    primaryColor: '#1e443a',
     apiUrl: 'https://tu-api.com/chat'
   });
 </script>`}

@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useState, forwardRef } from 'react'
+import { useEffect, useImperativeHandle, useState, forwardRef, useRef } from 'react'
 import { mergeConfig } from '../config'
 import { useChat } from '../hooks/useChat'
 import type { WidgetConfig } from '../types'
@@ -25,6 +25,7 @@ export const ChatWidget = forwardRef<ChatWidgetHandle, ChatWidgetProps>(function
   const merged = mergeConfig(config)
   const [isOpen, setIsOpen] = useState(false)
   const { messages, isTyping, sendMessage } = useChat(config)
+  const rootRef = useRef<HTMLDivElement>(null)
 
   useImperativeHandle(ref, () => ({
     open: () => setIsOpen(true),
@@ -34,7 +35,7 @@ export const ChatWidget = forwardRef<ChatWidgetHandle, ChatWidgetProps>(function
   }))
 
   useEffect(() => {
-    const root = document.querySelector('.garoo-root') as HTMLElement | null
+    const root = rootRef.current
     if (!root) return
 
     root.style.setProperty('--garoo-primary', merged.primaryColor)
@@ -46,7 +47,7 @@ export const ChatWidget = forwardRef<ChatWidgetHandle, ChatWidgetProps>(function
     merged.position === 'bottom-left' ? 'garoo-root--bottom-left' : 'garoo-root--bottom-right'
 
   return (
-    <div className={`garoo-root ${positionClass}`}>
+    <div ref={rootRef} className={`garoo-root ${positionClass}`}>
       {isOpen && (
         <div className="garoo-panel" role="dialog" aria-modal="true" aria-label={merged.title}>
           <ChatHeader
