@@ -4,6 +4,22 @@ interface MessageBubbleProps {
   message: ChatMessage
 }
 
+function linkify(text: string) {
+  const urlRegex = /(https?:\/\/[^\s<]+)/g
+  const parts = text.split(urlRegex)
+  return parts.map((part, i) => {
+    if (urlRegex.test(part)) {
+      urlRegex.lastIndex = 0
+      return (
+        <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="garoo-bubble__link">
+          {part}
+        </a>
+      )
+    }
+    return part
+  })
+}
+
 export function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === 'user'
   const isError = message.status === 'error'
@@ -14,7 +30,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       role="article"
       aria-label={isUser ? 'Tu mensaje' : 'Respuesta del asistente'}
     >
-      {message.content}
+      {linkify(message.content)}
     </div>
   )
 }

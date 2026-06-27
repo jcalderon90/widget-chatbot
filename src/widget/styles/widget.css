@@ -258,6 +258,22 @@
   color: #991b1b;
 }
 
+.garoo-bubble__link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.garoo-bubble__link:hover {
+  opacity: 1;
+}
+
+.garoo-bubble--user .garoo-bubble__link {
+  color: #c8e6e0;
+}
+
 .garoo-typing {
   align-self: flex-start;
   display: flex;
