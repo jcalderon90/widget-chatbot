@@ -14,7 +14,6 @@ export function ChatLauncher({ isOpen, showBadge = true, onClick }: ChatLauncher
       onClick={onClick}
       aria-label={isOpen ? 'Cerrar chat' : 'Abrir chat'}
       aria-expanded={isOpen}
-      style={{ position: 'relative' }}
     >
       <ChatIcon />
       {!isOpen && showBadge && <span className="garoo-launcher__badge" aria-hidden="true" />}
