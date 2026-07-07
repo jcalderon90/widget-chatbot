@@ -11,11 +11,11 @@ export function DemoPage() {
         apiUrl: import.meta.env.VITE_WEBHOOK_URL as string,
         propertyId: 'ITZ',
         pageId: 'widget',
-        title: 'Garoo Assistant',
+        title: 'RedTec Assistant',
         subtitle: 'En línea · Respuesta rápida',
         primaryColor: '#1e443a',
         position: 'bottom-right',
-        greeting: '¡Hola! 👋 Soy el asistente de Garoo. ¿En qué puedo ayudarte?',
+        greeting: '¡Hola! 👋 Soy el asistente de RedTec. ¿En qué puedo ayudarte?',
         placeholder: 'Escribe tu mensaje...',
       })
     }, 400)
@@ -30,7 +30,7 @@ export function DemoPage() {
     <div className="demo">
       <header className="demo__hero">
         <span className="demo__badge">Widget embebible</span>
-        <h1>Garoo Chat Widget</h1>
+        <h1>RedTec Chat Widget</h1>
         <p>
           Interfaz de chat lista para integrar en cualquier sitio web. Haz clic en el botón
           flotante de la esquina inferior derecha para probarlo.

@@ -1,4 +1,4 @@
-# Guía de despliegue — Garoo Chat Widget
+# Guía de despliegue — RedTec Chat Widget
 
 Pasos concretos para publicar el widget en un servidor y usarlo en producción.
 
@@ -118,7 +118,7 @@ Snippet mínimo (pegar antes de `</body>`):
 <script src="https://tu-dominio.com/assets/widget/garoo-chat-widget.js"></script>
 <script>
   GarooChat.init({
-    title: 'Soporte Garoo',
+    title: 'Soporte RedTec',
     primaryColor: '#0d9488',
     apiUrl: 'https://api.tu-dominio.com/v1/chat'
   });

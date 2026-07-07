@@ -1,4 +1,4 @@
-# Garoo Chat Widget
+# RedTec Chat Widget
 
 Widget de chat embebible construido con **Vite + React + TypeScript**. Se puede insertar en cualquier página web con un único `<script>` y aparece como un botón flotante en la esquina de la pantalla.
 
@@ -168,7 +168,7 @@ Copia este código **antes del cierre de `</body>`** en cualquier página HTML:
 <script src="https://tu-dominio.com/assets/widget/garoo-chat-widget.js"></script>
 <script>
   GarooChat.init({
-    title: 'Soporte Garoo',
+    title: 'Soporte RedTec',
     subtitle: 'En línea · Respuesta rápida',
     primaryColor: '#0d9488',
     position: 'bottom-right',
@@ -202,7 +202,7 @@ Todas las opciones son opcionales. Si no las indicas, se usan los valores por de
 
 | Opción | Tipo | Por defecto | Descripción |
 |--------|------|-------------|-------------|
-| `title` | `string` | `'Garoo Assistant'` | Título en el header del chat |
+| `title` | `string` | `'RedTec Assistant'` | Título en el header del chat |
 | `subtitle` | `string` | `'Suele responder en segundos'` | Subtítulo bajo el título |
 | `primaryColor` | `string` | `'#0d9488'` | Color principal (hex). Afecta botón, header y acentos |
 | `position` | `'bottom-right'` \| `'bottom-left'` | `'bottom-right'` | Posición del widget en pantalla |
@@ -339,6 +339,57 @@ Como el widget se ejecuta en el navegador del visitante, tu API debe permitir el
 
 ---
 
+### Integración con Agent-Belize
+
+El widget está diseñado para enviar conversaciones al webhook del **Agent-Belize** (proyecto `@Agent-Belize/`).
+
+#### Configuración del webhook
+
+En tu código de inicialización, configura `apiUrl` apuntando al endpoint del webhook de Agent-Belize:
+
+```html
+<script src="https://tu-dominio.com/assets/widget/garoo-chat-widget.js"></script>
+<script>
+  GarooChat.init({
+    title: 'Soporte RedTec',
+    subtitle: 'En línea · Respuesta rápida',
+    primaryColor: '#0d9488',
+    position: 'bottom-right',
+    greeting: '¡Hola! ¿En qué podemos ayudarte?',
+    placeholder: 'Escribe tu mensaje...',
+    apiUrl: 'https://agent-belize.example.com/webhook'  // URL del webhook de Agent-Belize
+  });
+</script>
+```
+
+> **Nota:** Reemplaza `https://agent-belize.example.com/webhook` con la URL real de tu webhook de Agent-Belize (configurada en n8n).
+
+#### Formato de petición que espera Agent-Belize
+
+El widget envía el mensaje del usuario en este formato (compatible con el webhook de n8n de Agent-Belize):
+
+```json
+POST https://agent-belize.example.com/webhook
+Content-Type: application/json
+
+{
+  "key": "tu-webhook-key",
+  "body": {
+    "id": "session-id-unique",
+    "page_id": "page-id-configurado",
+    "last_input_text": "Mensaje del usuario",
+    "custom_fields": {
+      "propiedad": "property-id",
+      "canal_ingreso": "widget"
+    }
+  }
+}
+```
+
+Los campos `key`, `page_id`, `property_id` se configuran en el widget (ver `src/widget/config.ts`).
+
+---
+
 ## Ejemplos de integración
 
 ### HTML estático
@@ -374,7 +425,7 @@ En **Apariencia → Editor de temas → footer.php** (o con un plugin de snippet
 <script src="https://tu-dominio.com/assets/widget/garoo-chat-widget.js"></script>
 <script>
   GarooChat.init({
-    title: 'Soporte Garoo',
+    title: 'Soporte RedTec',
     apiUrl: 'https://api.tu-dominio.com/chat'
   });
 </script>
@@ -493,4 +544,4 @@ El widget usa el id `garoo-chat-widget-host` en el DOM. Solo puede haber **una i
 
 ## Licencia
 
-Proyecto privado — Garoo Services.
+Proyecto privado — RedTec Services.

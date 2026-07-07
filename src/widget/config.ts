@@ -5,7 +5,7 @@ export const DEFAULT_CONFIG: Required<WidgetConfig> = {
   webhookKey: '',
   propertyId: '',
   pageId: 'widget',
-  title: 'Garoo Assistant',
+  title: 'RedTec Assistant',
   subtitle: 'Suele responder en segundos',
   primaryColor: '#1e443a',
   position: 'bottom-right',

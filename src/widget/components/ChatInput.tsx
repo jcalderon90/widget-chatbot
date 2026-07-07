@@ -58,7 +58,7 @@ export function ChatInput({ placeholder, disabled, onSend }: ChatInputProps) {
           <SendIcon />
         </button>
       </form>
-      <p className="garoo-powered">Powered by Garoo Services</p>
+      <p className="garoo-powered">Powered by RedTec Services</p>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-# Arquitectura — Garoo Chat Widget
+# Arquitectura — RedTec Chat Widget
 
 Documentación técnica del widget embebible para desarrolladores.
 
