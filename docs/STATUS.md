@@ -13,6 +13,8 @@ URL del bundle:
 https://cdn.jsdelivr.net/gh/jcalderon90/widget-chatbot@v0.3.0/release/garoo-chat-widget.js
 ```
 
+SRI (`integrity`): `sha384-xwhvgP6Gt6xOfHjsYM1o3Kki8azVEtpKdN5LtbPRdAVgojREAwdeksHi1zK0NzZN`
+
 ## Hecho
 
 - ✅ 2026-09-29 — Prueba real contra `https://agentsprod.redtec.ai/webhook/hotels-agent` (`TEST_WIDGET_ITZ_001` / `TEST_WIDGET_KAA_001`): HTTP 200, cada hotel con sus datos, link de reserva prellenado.
@@ -22,6 +24,7 @@ https://cdn.jsdelivr.net/gh/jcalderon90/widget-chatbot@v0.3.0/release/garoo-chat
   - Sesión e historial separados por `propertyId`; storage bloqueado ya no rompe el widget; timeout de 90 s.
   - Probado en navegador (Playwright) contra producción con `TEST_WIDGET_BROWSER_ITZ_20260930`: textos en inglés, respuesta sin link cuando faltan datos, navegación a otra página conserva conversación y panel abierto, link final prellenado clicable. Sin errores de consola.
 - ✅ 2026-09-30 — Guía de instalación (`INSTALL-BELIZE.md`, tag `v0.3.0`) enviada al cliente para trasladar a Milestone.
+- ✅ 2026-09-30 — Agente (n8n) en producción: el link de reserva sale una sola vez por conversación y solo cuando ya hay fechas, adultos/niños y habitación; ya no se agrega el sitio web a cada respuesta.
 - ⚠️ **Este repo debe seguir público** mientras jsDelivr sirva el bundle desde aquí, y **ningún tag publicado se mueve ni se borra**: los sitios instalados cargan `@v0.3.0`. Versiones nuevas = tag nuevo.
 - ✅ CORS: el nodo Webhook de n8n tiene `allowedOrigins: "*"`, no hay que registrar los dominios de Milestone.
 - ✅ `utm_source=kaan-chat` en ITZ es el diseño documentado en Agent-Belize (no es un bug).
@@ -35,6 +38,7 @@ https://cdn.jsdelivr.net/gh/jcalderon90/widget-chatbot@v0.3.0/release/garoo-chat
 | ⬜ | Probar una reserva hasta el booking engine | El link abre el motor con fechas y huéspedes; no se ha completado una reserva. |
 | ⬜ | Decidir si el link debe distinguir el canal widget | Los links traen `utm_medium=manychat` aunque el canal sea `widget` (workflow en n8n). |
 | ⬜ | Sitio secundario de Growaton | Sigue con la versión anterior; actualizar su snippet al de `INSTALL-BELIZE.md` si se mantiene activo. |
+| ⬜ | RoomTypeID de ITZ para el deep link por habitación | Lado agente (n8n); lo tiene IT del hotel. |
 
 ## Notas para pruebas
 
