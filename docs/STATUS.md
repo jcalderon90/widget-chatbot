@@ -5,7 +5,7 @@
 
 ## Resumen
 
-Listo para instalar en los sitios oficiales de Itz'ana (ITZ) y Ka'ana (KAA) vía Milestone. El bundle v0.3.0 está publicado en jsDelivr desde este repo (tag `v0.3.0`) y los snippets finales por hotel están en [`INSTALL-BELIZE.md`](./INSTALL-BELIZE.md). Hoy el widget sigue corriendo solo en el sitio secundario de Growaton (versión anterior) hasta que Milestone instale.
+Listo para instalar en los sitios oficiales de Itz'ana (ITZ) y Ka'ana (KAA) vía Milestone. El bundle v0.3.0 está publicado en jsDelivr desde este repo (tag `v0.3.0`) y los snippets finales por hotel están en [`INSTALL-BELIZE.md`](./INSTALL-BELIZE.md), ya enviada al cliente el 2026-09-30. Fase actual: **esperando que Milestone instale**. Hoy el widget sigue corriendo solo en el sitio secundario de Growaton (versión anterior) hasta que Milestone instale.
 
 URL del bundle:
 
@@ -21,6 +21,8 @@ https://cdn.jsdelivr.net/gh/jcalderon90/widget-chatbot@v0.3.0/release/garoo-chat
   - Interfaz en inglés/español con `locale: 'auto'` según `<html lang>`; textos de `init()` localizables `{ en, es }`.
   - Sesión e historial separados por `propertyId`; storage bloqueado ya no rompe el widget; timeout de 90 s.
   - Probado en navegador (Playwright) contra producción con `TEST_WIDGET_BROWSER_ITZ_20260930`: textos en inglés, respuesta sin link cuando faltan datos, navegación a otra página conserva conversación y panel abierto, link final prellenado clicable. Sin errores de consola.
+- ✅ 2026-09-30 — Guía de instalación (`INSTALL-BELIZE.md`, tag `v0.3.0`) enviada al cliente para trasladar a Milestone.
+- ⚠️ **Este repo debe seguir público** mientras jsDelivr sirva el bundle desde aquí, y **ningún tag publicado se mueve ni se borra**: los sitios instalados cargan `@v0.3.0`. Versiones nuevas = tag nuevo.
 - ✅ CORS: el nodo Webhook de n8n tiene `allowedOrigins: "*"`, no hay que registrar los dominios de Milestone.
 - ✅ `utm_source=kaan-chat` en ITZ es el diseño documentado en Agent-Belize (no es un bug).
 
@@ -28,7 +30,7 @@ https://cdn.jsdelivr.net/gh/jcalderon90/widget-chatbot@v0.3.0/release/garoo-chat
 
 | Estado | Tarea | Notas |
 |--------|-------|-------|
-| ⬜ | Milestone instala los snippets en el template global de cada sitio | Snippets en [`INSTALL-BELIZE.md`](./INSTALL-BELIZE.md). |
+| 🟡 | Milestone instala los snippets en el template global de cada sitio | Guía enviada al cliente el 2026-09-30; esperando a que la traslade a Milestone y confirme la instalación. Snippets en [`INSTALL-BELIZE.md`](./INSTALL-BELIZE.md). |
 | ⬜ | Probar desde los dominios reales de Milestone tras instalar | Carga del script, conversación, navegación entre páginas, link al motor. |
 | ⬜ | Probar una reserva hasta el booking engine | El link abre el motor con fechas y huéspedes; no se ha completado una reserva. |
 | ⬜ | Decidir si el link debe distinguir el canal widget | Los links traen `utm_medium=manychat` aunque el canal sea `widget` (workflow en n8n). |
