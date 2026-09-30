@@ -1,21 +1,24 @@
-import type { WidgetConfig } from './types'
+import { LOCALE_DEFAULTS, pickText, resolveLocale } from './i18n'
+import type { ResolvedConfig, WidgetConfig } from './types'
 
-export const DEFAULT_CONFIG: Required<WidgetConfig> = {
-  apiUrl: '',
-  webhookKey: '',
-  propertyId: '',
-  pageId: 'widget',
-  title: 'RedTec Assistant',
-  subtitle: 'Suele responder en segundos',
-  primaryColor: '#1e443a',
-  position: 'bottom-right',
-  greeting: '¡Hola! 👋 ¿En qué puedo ayudarte hoy?',
-  placeholder: 'Escribe tu mensaje...',
-  locale: 'es',
-}
+export function mergeConfig(config: WidgetConfig = {}): ResolvedConfig {
+  const locale = resolveLocale(config.locale)
+  const defaults = LOCALE_DEFAULTS[locale]
 
-export function mergeConfig(config: WidgetConfig = {}): Required<WidgetConfig> {
-  return { ...DEFAULT_CONFIG, ...config }
+  return {
+    apiUrl: config.apiUrl ?? '',
+    webhookKey: config.webhookKey ?? '',
+    propertyId: config.propertyId ?? '',
+    pageId: config.pageId ?? 'widget',
+    title: pickText(config.title, locale, defaults.title),
+    subtitle: pickText(config.subtitle, locale, defaults.subtitle),
+    primaryColor: config.primaryColor ?? '#1e443a',
+    position: config.position ?? 'bottom-right',
+    greeting: pickText(config.greeting, locale, defaults.greeting),
+    placeholder: pickText(config.placeholder, locale, defaults.placeholder),
+    locale,
+    ui: defaults.ui,
+  }
 }
 
 export function createMessageId(): string {

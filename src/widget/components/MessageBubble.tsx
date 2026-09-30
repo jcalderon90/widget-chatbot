@@ -1,7 +1,8 @@
-import type { ChatMessage } from '../types'
+import type { ChatMessage, UiStrings } from '../types'
 
 interface MessageBubbleProps {
   message: ChatMessage
+  ui: UiStrings
 }
 
 function linkify(text: string) {
@@ -20,7 +21,7 @@ function linkify(text: string) {
   })
 }
 
-export function MessageBubble({ message }: MessageBubbleProps) {
+export function MessageBubble({ message, ui }: MessageBubbleProps) {
   const isUser = message.role === 'user'
   const isError = message.status === 'error'
 
@@ -28,16 +29,16 @@ export function MessageBubble({ message }: MessageBubbleProps) {
     <div
       className={`garoo-bubble ${isUser ? 'garoo-bubble--user' : 'garoo-bubble--assistant'}${isError ? ' garoo-bubble--error' : ''}`}
       role="article"
-      aria-label={isUser ? 'Tu mensaje' : 'Respuesta del asistente'}
+      aria-label={isUser ? ui.userMessage : ui.assistantMessage}
     >
       {linkify(message.content)}
     </div>
   )
 }
 
-export function TypingIndicator() {
+export function TypingIndicator({ label }: { label: string }) {
   return (
-    <div className="garoo-typing" aria-label="Escribiendo..." role="status">
+    <div className="garoo-typing" aria-label={label} role="status">
       <span />
       <span />
       <span />

@@ -1,6 +1,7 @@
-import { useEffect, useImperativeHandle, useState, forwardRef, useRef } from 'react'
+import { useEffect, useImperativeHandle, useMemo, useState, forwardRef, useRef } from 'react'
 import { mergeConfig } from '../config'
 import { useChat } from '../hooks/useChat'
+import { loadOpenState, saveOpenState } from '../storage'
 import type { WidgetConfig } from '../types'
 import { ChatHeader } from './ChatHeader'
 import { ChatInput } from './ChatInput'
@@ -22,10 +23,14 @@ export const ChatWidget = forwardRef<ChatWidgetHandle, ChatWidgetProps>(function
   { config },
   ref,
 ) {
-  const merged = mergeConfig(config)
-  const [isOpen, setIsOpen] = useState(false)
-  const { messages, isTyping, sendMessage } = useChat(config)
+  const merged = useMemo(() => mergeConfig(config), [config])
+  const [isOpen, setIsOpen] = useState(() => loadOpenState(merged.propertyId))
+  const { messages, isTyping, sendMessage } = useChat(merged)
   const rootRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    saveOpenState(merged.propertyId, isOpen)
+  }, [merged.propertyId, isOpen])
 
   useImperativeHandle(ref, () => ({
     open: () => setIsOpen(true),
@@ -53,17 +58,19 @@ export const ChatWidget = forwardRef<ChatWidgetHandle, ChatWidgetProps>(function
           <ChatHeader
             title={merged.title}
             subtitle={merged.subtitle}
+            closeLabel={merged.ui.closeChat}
             onClose={() => setIsOpen(false)}
           />
-          <MessageList messages={messages} isTyping={isTyping} />
+          <MessageList messages={messages} isTyping={isTyping} ui={merged.ui} />
           <ChatInput
             placeholder={merged.placeholder}
             disabled={isTyping}
+            ui={merged.ui}
             onSend={sendMessage}
           />
         </div>
       )}
-      <ChatLauncher isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} />
+      <ChatLauncher isOpen={isOpen} ui={merged.ui} onClick={() => setIsOpen((prev) => !prev)} />
     </div>
   )
 })

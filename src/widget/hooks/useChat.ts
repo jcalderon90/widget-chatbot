@@ -1,6 +1,10 @@
-import { useCallback, useRef, useState } from 'react'
-import { createMessageId, mergeConfig } from '../config'
-import type { ChatMessage, WidgetConfig } from '../types'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { createMessageId } from '../config'
+import { getOrCreateSessionId, loadHistory, saveHistory } from '../storage'
+import type { ChatMessage, ResolvedConfig } from '../types'
+
+/** El agente agrupa mensajes (espera en Redis) antes de responder; 90 s cubre el peor caso con holgura. */
+const REQUEST_TIMEOUT_MS = 90_000
 
 const MOCK_REPLIES = [
   'Gracias por tu mensaje. Un agente te atenderá en breve.',
@@ -9,63 +13,66 @@ const MOCK_REPLIES = [
   '¿Hay algo más en lo que pueda asistirte?',
 ]
 
-function getOrCreateSessionId(): string {
-  const key = 'gsid_garoo'
-  let id = localStorage.getItem(key)
-  if (!id) {
-    id = crypto.randomUUID()
-    localStorage.setItem(key, id)
-  }
-  return id
-}
+async function fetchN8nReply(config: ResolvedConfig, message: string, sessionId: string): Promise<string> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
 
-async function fetchN8nReply(
-  config: ReturnType<typeof mergeConfig>,
-  message: string,
-  sessionId: string,
-): Promise<string> {
-  const response = await fetch(config.apiUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      key: config.webhookKey,
-      body: {
-        id: sessionId,
-        page_id: config.pageId,
-        last_input_text: message,
-        custom_fields: {
-          propiedad: config.propertyId,
-          canal_ingreso: 'widget',
+  try {
+    const response = await fetch(config.apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({
+        key: config.webhookKey,
+        body: {
+          id: sessionId,
+          page_id: config.pageId,
+          last_input_text: message,
+          custom_fields: {
+            propiedad: config.propertyId,
+            canal_ingreso: 'widget',
+          },
         },
-      },
-    }),
-  })
+      }),
+    })
 
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`)
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`)
+    }
+
+    const data = (await response.json()) as { response?: string; response_text?: string; reply?: string; message?: string }
+    const reply = data.response_text ?? data.response ?? data.reply ?? data.message
+    if (!reply) throw new Error('Empty reply')
+    return reply
+  } finally {
+    clearTimeout(timer)
   }
-
-  const data = (await response.json()) as { response?: string; response_text?: string; reply?: string; message?: string }
-  return data.response_text ?? data.response ?? data.reply ?? data.message ?? MOCK_REPLIES[0]
 }
 
 function getMockReply(): string {
   return MOCK_REPLIES[Math.floor(Math.random() * MOCK_REPLIES.length)]
 }
 
-export function useChat(config: WidgetConfig) {
-  const merged = mergeConfig(config)
-  const sessionId = useRef(getOrCreateSessionId())
-  const [messages, setMessages] = useState<ChatMessage[]>(() => [
-    {
-      id: createMessageId(),
-      role: 'assistant',
-      content: merged.greeting,
-      timestamp: Date.now(),
-      status: 'sent',
-    },
-  ])
+export function useChat(config: ResolvedConfig) {
+  const sessionId = useRef(getOrCreateSessionId(config.propertyId))
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    () =>
+      loadHistory(config.propertyId) ?? [
+        {
+          id: createMessageId(),
+          role: 'assistant',
+          content: config.greeting,
+          timestamp: Date.now(),
+          status: 'sent',
+        },
+      ],
+  )
   const [isTyping, setIsTyping] = useState(false)
+
+  // La conversación visible sobrevive a la navegación entre páginas del sitio.
+  useEffect(() => {
+    saveHistory(config.propertyId, messages)
+  }, [config.propertyId, messages])
 
   const sendMessage = useCallback(
     async (text: string) => {
@@ -86,8 +93,8 @@ export function useChat(config: WidgetConfig) {
       try {
         let reply: string
 
-        if (merged.apiUrl) {
-          reply = await fetchN8nReply(merged, trimmed, sessionId.current)
+        if (config.apiUrl) {
+          reply = await fetchN8nReply(config, trimmed, sessionId.current)
         } else {
           await new Promise((resolve) => setTimeout(resolve, 900 + Math.random() * 800))
           reply = getMockReply()
@@ -108,7 +115,7 @@ export function useChat(config: WidgetConfig) {
           {
             id: createMessageId(),
             role: 'assistant',
-            content: 'Lo siento, hubo un error al procesar tu mensaje. Inténtalo de nuevo.',
+            content: config.ui.error,
             timestamp: Date.now(),
             status: 'error',
           },
@@ -117,7 +124,7 @@ export function useChat(config: WidgetConfig) {
         setIsTyping(false)
       }
     },
-    [isTyping, merged.apiUrl],
+    [isTyping, config],
   )
 
   return { messages, isTyping, sendMessage }

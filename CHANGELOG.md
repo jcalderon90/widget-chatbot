@@ -6,6 +6,23 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ---
 
+## [0.3.0] — 2026-09-30
+
+Versión para instalar en los sitios oficiales de Itz'ana y Ka'ana (Milestone).
+
+### Añadido
+- **Conversación persistente entre páginas:** el historial visible (`localStorage`, 24 h, máx. 60 mensajes) y el estado abierto/cerrado del panel (`sessionStorage`) sobreviven a la navegación. Antes, cada cambio de página reiniciaba el chat al saludo aunque el agente conservara el contexto.
+- **Idioma de la interfaz:** `locale: 'auto'` (nuevo por defecto) toma el `<html lang>` de la página. Textos por defecto, mensaje de error y aria-labels en inglés y español.
+- **Textos localizables:** `title`, `subtitle`, `greeting` y `placeholder` aceptan `{ en, es }`.
+- **Publicación por jsDelivr:** bundle versionado en `release/`, servido por tag.
+
+### Cambiado
+- Sesión, historial y estado del panel separados por `propertyId` (claves `gsid_garoo_<id>`, etc.). Dos hoteles en el mismo dominio ya no comparten memoria. Las sesiones guardadas bajo la clave anterior `gsid_garoo` no se reutilizan.
+- Timeout de 90 s por petición; una respuesta vacía del servidor se trata como error en lugar de mostrar un texto de demo.
+
+### Corregido
+- El widget ya no se rompe si el navegador bloquea `localStorage` (Safari privado, políticas del sitio) ni si `crypto.randomUUID` no está disponible.
+
 ## [0.2.0] — 2026-06-24
 
 ### Añadido

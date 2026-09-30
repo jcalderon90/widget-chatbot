@@ -3,10 +3,11 @@ import { BotIcon, CloseIcon } from './Icons'
 interface ChatHeaderProps {
   title: string
   subtitle: string
+  closeLabel: string
   onClose: () => void
 }
 
-export function ChatHeader({ title, subtitle, onClose }: ChatHeaderProps) {
+export function ChatHeader({ title, subtitle, closeLabel, onClose }: ChatHeaderProps) {
   return (
     <header className="garoo-header">
       <div className="garoo-header__avatar">
@@ -20,7 +21,7 @@ export function ChatHeader({ title, subtitle, onClose }: ChatHeaderProps) {
         type="button"
         className="garoo-header__close"
         onClick={onClose}
-        aria-label="Cerrar chat"
+        aria-label={closeLabel}
       >
         <CloseIcon />
       </button>

@@ -181,6 +181,16 @@ Copia este código **antes del cierre de `</body>`** en cualquier página HTML:
 
 Reemplaza la URL del `src` por la ruta real donde subiste el archivo.
 
+### Versión publicada (jsDelivr)
+
+Cada versión se publica como archivo en `release/` y un tag git; jsDelivr la sirve desde GitHub con CDN y caché inmutable por tag:
+
+```
+https://cdn.jsdelivr.net/gh/jcalderon90/widget-chatbot@v<versión>/release/garoo-chat-widget.js
+```
+
+Para publicar una versión nueva: subir `version` en `package.json`, `npm run build:widget`, copiar `dist/widget/garoo-chat-widget.js` a `release/`, commit, `git tag v<versión>` y `git push --tags`. Los sitios instalados no cambian hasta que se actualice el tag en su snippet (y el hash `integrity`, si lo usan) — nunca mover un tag ya publicado.
+
 ### Flujo resumido
 
 ```
@@ -202,14 +212,19 @@ Todas las opciones son opcionales. Si no las indicas, se usan los valores por de
 
 | Opción | Tipo | Por defecto | Descripción |
 |--------|------|-------------|-------------|
-| `title` | `string` | `'RedTec Assistant'` | Título en el header del chat |
-| `subtitle` | `string` | `'Suele responder en segundos'` | Subtítulo bajo el título |
-| `primaryColor` | `string` | `'#0d9488'` | Color principal (hex). Afecta botón, header y acentos |
+| `title` | texto localizable | `'RedTec Assistant'` | Título en el header del chat |
+| `subtitle` | texto localizable | `'Usually replies in seconds'` / `'Suele responder en segundos'` | Subtítulo bajo el título |
+| `primaryColor` | `string` | `'#1e443a'` | Color principal (hex). Afecta botón, header y acentos |
 | `position` | `'bottom-right'` \| `'bottom-left'` | `'bottom-right'` | Posición del widget en pantalla |
-| `greeting` | `string` | `'¡Hola! 👋 ¿En qué puedo ayudarte hoy?'` | Primer mensaje del asistente |
-| `placeholder` | `string` | `'Escribe tu mensaje...'` | Texto del campo de entrada |
-| `locale` | `'es'` \| `'en'` | `'es'` | Reservado para futuras traducciones |
+| `greeting` | texto localizable | `'Hi! 👋 How can I help you today?'` / `'¡Hola! 👋 ¿En qué puedo ayudarte hoy?'` | Primer mensaje del asistente |
+| `placeholder` | texto localizable | `'Type your message...'` / `'Escribe tu mensaje...'` | Texto del campo de entrada |
+| `locale` | `'auto'` \| `'es'` \| `'en'` | `'auto'` | Idioma de la interfaz. `'auto'` lee el `<html lang>` de la página: `es*` → español, cualquier otro → inglés |
 | `apiUrl` | `string` | `''` (vacío) | URL de tu API de chat. Si está vacío, usa respuestas simuladas |
+| `propertyId` | `string` | `''` | Propiedad que atiende el agente (`'ITZ'` Itz'ana, `'KAA'` Ka'ana). También separa sesión e historial por propiedad |
+| `pageId` | `string` | `'widget'` | Se envía como `page_id` al webhook |
+| `webhookKey` | `string` | `''` | Se envía como `key`. El workflow de Agent-Belize no lo valida |
+
+**Texto localizable:** un `string` fijo, o un objeto por idioma — `{ en: 'Hi!', es: '¡Hola!' }`. Con `locale: 'auto'`, un mismo snippet muestra inglés en las páginas en inglés y español en las páginas `/es/`. Los textos de accesibilidad (aria-labels) y el mensaje de error siguen el mismo idioma.
 
 ### Ejemplo con todas las opciones
 
@@ -458,7 +473,15 @@ useEffect(() => {
 
 ### Varias páginas, un solo script
 
-Sube el archivo **una vez** al servidor y reutiliza la misma URL en todas las páginas. Puedes usar configuraciones distintas por página cambiando los parámetros de `GarooChat.init()`.
+Sube el archivo **una vez** al servidor y reutiliza la misma URL en todas las páginas (lo más simple: el template global / footer del sitio). Puedes usar configuraciones distintas por página cambiando los parámetros de `GarooChat.init()`.
+
+La conversación acompaña al visitante mientras navega:
+
+- **Historial visible:** se guarda en `localStorage` (`gmsg_garoo_<propertyId>`), máx. 60 mensajes, y se descarta tras 24 h sin actividad.
+- **Panel abierto/cerrado:** se recuerda en `sessionStorage` (`gopen_garoo_<propertyId>`) — si el visitante lo tenía abierto, sigue abierto en la página siguiente.
+- **Sesión del agente:** `localStorage` (`gsid_garoo_<propertyId>`), enviada como `body.id`. Es la misma clave de memoria del agente en el servidor.
+
+Si el navegador bloquea el storage (Safari privado, políticas del sitio), el widget funciona igual, solo que sin persistencia entre páginas.
 
 ---
 

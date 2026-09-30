@@ -1,13 +1,15 @@
 import { useRef, type FormEvent, type KeyboardEvent } from 'react'
+import type { UiStrings } from '../types'
 import { SendIcon } from './Icons'
 
 interface ChatInputProps {
   placeholder: string
   disabled?: boolean
+  ui: UiStrings
   onSend: (text: string) => void
 }
 
-export function ChatInput({ placeholder, disabled, onSend }: ChatInputProps) {
+export function ChatInput({ placeholder, disabled, ui, onSend }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleSubmit = (event: FormEvent) => {
@@ -47,13 +49,13 @@ export function ChatInput({ placeholder, disabled, onSend }: ChatInputProps) {
           disabled={disabled}
           onKeyDown={handleKeyDown}
           onInput={handleInput}
-          aria-label="Mensaje"
+          aria-label={ui.messageLabel}
         />
         <button
           type="submit"
           className="garoo-send"
           disabled={disabled}
-          aria-label="Enviar mensaje"
+          aria-label={ui.sendLabel}
         >
           <SendIcon />
         </button>
