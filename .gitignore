@@ -35,3 +35,6 @@ dist/
 build/
 .next/
 .cache/
+
+# Skills/config locales de Claude Code
+.claude/
